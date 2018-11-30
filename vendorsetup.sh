@@ -28,3 +28,6 @@
 #
 
 add_lunch_combo qssi-userdebug
+
+# Allow missing dependencies
+export ALLOW_MISSING_DEPENDENCIES=true

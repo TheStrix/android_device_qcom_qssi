@@ -68,8 +68,8 @@ PRODUCT_PACKAGES += libGLES_android
 
 -include $(QCPATH)/common/config/qtic-config.mk
 
-PRODUCT_BOOT_JARS += telephony-ext \
-                     tcmiface
+#PRODUCT_BOOT_JARS += telephony-ext \
+#                     tcmiface
 PRODUCT_PACKAGES += telephony-ext
 TARGET_ENABLE_QC_AV_ENHANCEMENTS := false
 

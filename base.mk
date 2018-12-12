@@ -845,3 +845,6 @@ TARGET_FS_CONFIG_GEN := device/qcom/qssi/config.fs
 PRODUCT_PACKAGES += liboemaids_system
 PRODUCT_PACKAGES += liboemaids_vendor
 PRODUCT_PACKAGES += android.hardware.health@2.0-service
+
+# Skip vendor/pa kernel.mk
+TARGET_PROVIDES_KERNEL_MAKEFILE := true

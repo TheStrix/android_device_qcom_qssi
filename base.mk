@@ -109,7 +109,6 @@ ifeq ($(TARGET_USE_QTI_BT_STACK), true)
 BT += libbluetooth_qti
 endif
 BT += libbt-hidlclient
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
 
 #C2DColorConvert
 C2DCC := libc2dcolorconvert
@@ -776,8 +775,8 @@ endif
 # enable overlays to use our version of
 # source/resources etc.
 # Temporary for QSSI until RRO migration
-DEVICE_PACKAGE_OVERLAYS += device/qcom/common/device/overlay
-PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
+DEVICE_PACKAGE_OVERLAYS += device/qcom/qssi/device/overlay
+PRODUCT_PACKAGE_OVERLAYS += device/qcom/qssi/product/overlay
 
 # Set up flags to determine the kernel version
 ifeq ($(TARGET_KERNEL_VERSION),)

@@ -20,7 +20,7 @@ TARGET_DEFINES_DALVIK_HEAP := true
 
 $(call inherit-product, device/qcom/$(VENDOR_QTI_DEVICE)/common64.mk)
 
-PRODUCT_NAME := qssi
+PRODUCT_NAME := pa_qssi
 PRODUCT_DEVICE := $(VENDOR_QTI_DEVICE)
 PRODUCT_MODEL := QSSI system image for arm64
 

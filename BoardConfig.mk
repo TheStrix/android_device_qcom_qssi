@@ -7,7 +7,7 @@ TARGET_BOARD_PLATFORM := $(VENDOR_QTI_PLATFORM)
 TARGET_BOOTLOADER_BOARD_NAME := qssi
 
 # Skip kernel and recovery images for system image only generation
-TARGET_NO_KERNEL   := true
+TARGET_NO_KERNEL   := false
 TARGET_NO_RECOVERY := true
 
 TARGET_ARCH := arm64

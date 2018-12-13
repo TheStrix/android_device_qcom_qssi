@@ -1,2 +1,2 @@
-PRODUCT_MAKEFILES := \
-	$(LOCAL_DIR)/qssi.mk
+#PRODUCT_MAKEFILES := \
+#	$(LOCAL_DIR)/qssi.mk

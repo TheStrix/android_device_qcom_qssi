@@ -13,7 +13,7 @@ VENDOR_QTI_DEVICE := qssi
 TARGET_USES_QSSI := true
 
 # Enable AVB 2.0
-BOARD_AVB_ENABLE := true
+#BOARD_AVB_ENABLE := true
 
 TARGET_DEFINES_DALVIK_HEAP := true
 
@@ -41,7 +41,7 @@ PRODUCT_PROPERTY_OVERRIDES  += \
   ro.opengles.version=196610
 
 # Default A/B configuration.
-ENABLE_AB ?= true
+#ENABLE_AB ?= true
 
 TARGET_KERNEL_VERSION := 4.9
 TARGET_KERNEL_VERSION ?= $(patsubst kernel/msm-%,%,$(firstword $(wildcard kernel/msm-*)))

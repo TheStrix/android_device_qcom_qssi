@@ -17,7 +17,6 @@ TARGET_USES_QSSI := true
 
 TARGET_DEFINES_DALVIK_HEAP := true
 
-
 $(call inherit-product, device/qcom/$(VENDOR_QTI_DEVICE)/common64.mk)
 
 PRODUCT_NAME := pa_qssi
@@ -32,6 +31,11 @@ PRODUCT_PROPERTY_OVERRIDES  += \
   dalvik.vm.heapminfree=512k \
   dalvik.vm.heapmaxfree=8m
 
+# Property to enable app trigger
+PRODUCT_PROPERTY_OVERRIDES  += \
+  ro.vendor.at_library=libqti-at.so\
+  persist.vendor.qti.games.gt.prof=1
+
 # system prop for opengles version
 #
 # 196608 is decimal for 0x30000 to report version 3
@@ -39,6 +43,9 @@ PRODUCT_PROPERTY_OVERRIDES  += \
 # 196610 is decimal for 0x30002 to report version 3.2
 PRODUCT_PROPERTY_OVERRIDES  += \
   ro.opengles.version=196610
+
+# RRO configuration
+TARGET_USES_RRO := true
 
 # Default A/B configuration.
 #ENABLE_AB ?= true
@@ -67,11 +74,12 @@ WLAN_CHIPSET := qca_cld3
 PRODUCT_PACKAGES += libGLES_android
 
 -include $(QCPATH)/common/config/qtic-config.mk
+-include hardware/qcom/display/config/sdm845.mk
 
 #PRODUCT_BOOT_JARS += telephony-ext \
 #                     tcmiface
 PRODUCT_PACKAGES += telephony-ext
-TARGET_ENABLE_QC_AV_ENHANCEMENTS := false
+TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
 
 TARGET_DISABLE_DASH := true
 
@@ -82,7 +90,7 @@ endif
 PRODUCT_PACKAGES += android.hardware.media.omx@1.0-impl
 
 # Audio configuration file
--include $(TOPDIR)hardware/qcom/audio/configs/qssi/qssi.mk
+-include $(TOPDIR)hardware/qcom/audio/configs/sdm845/sdm845.mk
 
 PRODUCT_PACKAGES += fs_config_files
 
@@ -99,8 +107,10 @@ PRODUCT_PACKAGES += update_engine \
 PRODUCT_PACKAGES_DEBUG += bootctl
 endif
 
-#DEVICE_MANIFEST_FILE := device/qcom/qssi/manifest.xml
-#DEVICE_MATRIX_FILE   := device/qcom/qssi/compatibility_matrix.xml
+DEVICE_MANIFEST_FILE := device/qcom/qssi/manifest.xml
+DEVICE_MATRIX_FILE   := device/qcom/qssi/compatibility_matrix.xml
+DEVICE_FRAMEWORK_MANIFEST_FILE := device/qcom/qssi/framework_manifest.xml
+DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := device/qcom/qssi/vendor_framework_compatibility_matrix.xml
 
 #ANT+ stack
 PRODUCT_PACKAGES += \
@@ -109,24 +119,19 @@ PRODUCT_PACKAGES += \
     antradio_app \
     libvolumelistener
 
-# Display/Graphics
 PRODUCT_PACKAGES += \
-    android.hardware.graphics.composer@2.1-impl \
-    android.hardware.graphics.composer@2.1-service \
-    android.hardware.graphics.mapper@2.0-impl-qti-display \
-    vendor.qti.hardware.display.allocator@1.0-service \
-    android.hardware.memtrack@1.0-impl \
-    android.hardware.memtrack@1.0-service \
-    android.hardware.light@2.0-impl \
-    android.hardware.light@2.0-service \
     android.hardware.configstore@1.0-service \
-    android.hardware.broadcastradio@1.0-impl \
-    modetest
+    android.hardware.broadcastradio@1.0-impl
 
 # Vibrator
 PRODUCT_PACKAGES += \
     android.hardware.vibrator@1.0-impl \
     android.hardware.vibrator@1.0-service \
+
+# Context hub HAL
+PRODUCT_PACKAGES += \
+    android.hardware.contexthub@1.0-impl.generic \
+    android.hardware.contexthub@1.0-service
 
 # Camera configuration file. Shared by passthrough/binderized camera HAL
 PRODUCT_PACKAGES += camera.device@3.2-impl
@@ -184,10 +189,15 @@ PRODUCT_VENDOR_MOVE_ENABLED := true
 
 PRODUCT_PROPERTY_OVERRIDES += rild.libpath=/vendor/lib64/libril-qc-hal-qmi.so
 
+#Property to set BG App limit
+PRODUCT_PROPERTY_OVERRIDES += ro.vendor.qti.sys.fw.bg_apps_limit=60
+
 #Enable QTI KEYMASTER and GATEKEEPER HIDLs
 KMGK_USE_QTI_SERVICE := true
 
+ifneq ($(strip $(TARGET_USES_RRO)),true)
 DEVICE_PACKAGE_OVERLAYS += device/qcom/qssi/overlay
+endif
 
 #VR
 PRODUCT_PACKAGES += android.hardware.vr@1.0-impl \
@@ -195,13 +205,6 @@ PRODUCT_PACKAGES += android.hardware.vr@1.0-impl \
 #Thermal
 PRODUCT_PACKAGES += android.hardware.thermal@1.0-impl \
                     android.hardware.thermal@1.0-service
-
-# for HIDL related packages
-PRODUCT_PACKAGES += \
-  android.hardware.audio@2.0-service \
-  android.hardware.audio@2.0-impl \
-  android.hardware.audio.effect@2.0-impl \
-  android.hardware.soundtrigger@2.0-impl
 
 # Camera HIDL configuration file. Shared by passthrough/binderized camera HAL
 PRODUCT_PACKAGES += camera.device@3.2-impl
@@ -217,3 +220,31 @@ TARGET_SCVE_DISABLED := true
 SDM845_DISABLE_MODULE := true
 
 ENABLE_VENDOR_RIL_SERVICE := true
+
+# Enable vndk-sp Libraries
+PRODUCT_PACKAGES += vndk_package
+
+PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE:=true
+
+#Enable WIFI AWARE FEATURE
+WIFI_HIDL_FEATURE_AWARE := true
+
+# Enable STA + SAP Concurrency.
+WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
+
+# Enable SAP + SAP Feature.
+QC_WIFI_HIDL_FEATURE_DUAL_AP := true
+
+TARGET_USES_MKE2FS := true
+
+$(call inherit-product, build/make/target/product/product_launched_with_o_mr1.mk)
+
+TARGET_MOUNT_POINTS_SYMLINKS := false
+
+# propery "ro.vendor.build.security_patch" is checked for
+# CTS compliance so need to make sure its set with following
+# format "YYYY-MM-DD" on production devices.
+#
+ifeq ($(ENABLE_VENDOR_IMAGE), true)
+ VENDOR_SECURITY_PATCH := 2018-06-05
+endif

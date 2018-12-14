@@ -248,3 +248,11 @@ TARGET_MOUNT_POINTS_SYMLINKS := false
 ifeq ($(ENABLE_VENDOR_IMAGE), true)
  VENDOR_SECURITY_PATCH := 2018-06-05
 endif
+
+# Inherit from the proprietary version
+-include vendor/xiaomi/beryllium/BoardConfigVendor.mk
+-include vendor/xiaomi/sdm845-common/BoardConfigVendor.mk
+
+# Get non-open-source specific aspects
+$(call inherit-product-if-exists, vendor/xiaomi/beryllium/beryllium-vendor.mk)
+$(call inherit-product-if-exists, vendor/xiaomi/sdm845-common/sdm845-common-vendor.mk)

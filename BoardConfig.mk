@@ -182,3 +182,6 @@ TARGET_ENABLE_MEDIADRM_64 := true
 #All vendor APK will be compiled against system_current API set.
 BOARD_SYSTEMSDK_VERSIONS:=28
 BOARD_VNDK_VERSION:= current
+
+# VNDK runtime disable
+BOARD_VNDK_RUNTIME_DISABLE := true
